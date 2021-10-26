@@ -1,82 +1,43 @@
-import { luhnAlgorithm, validateNumber } from './validate';
-
-export default class Widget {
+export default class Popover {
   constructor() {
-    this.validator = document.querySelector('#validator');
-    this.inputNumber = null;
+    this.popover = document.querySelector('#popover');
   }
 
   renderDom() {
-    const form = document.createElement('form');
-    const input = document.createElement('input');
     const button = document.createElement('button');
-    const title = document.createElement('h3');
-    const list = document.createElement('ul');
-    const li = document.createElement('li');
-    title.textContent = 'Check your credit card number';
-    button.textContent = 'Click to Validate';
-    button.type = 'button';
-    input.type = 'text';
-    input.placeholder = 'Credit card number';
-    this.validator.appendChild(form);
-    form.appendChild(title);
-    form.appendChild(list);
-    list.appendChild(li);
-    for (let i = 0; i < 6; i += 1) {
-      list.appendChild(li.cloneNode());
-    }
-    const cardsLi = document.querySelectorAll('li');
-    cardsLi[0].classList.add('card', 'visa');
-    cardsLi[1].classList.add('card', 'master-card');
-    cardsLi[2].classList.add('card', 'american-express');
-    cardsLi[3].classList.add('card', 'jcb');
-    cardsLi[4].classList.add('card', 'maestro');
-    cardsLi[5].classList.add('card', 'discover');
-    cardsLi[6].classList.add('card', 'mir');
-    form.appendChild(input);
-    form.appendChild(button);
-
-    this.inputValue();
+    button.textContent = 'Click to toggle popover';
+    this.popover.appendChild(button);
+    Popover.inputClick(button);
   }
 
-  inputValue() {
-    const input = document.querySelector('input');
-    const button = document.querySelector('button');
-
-    input.addEventListener('input', (e) => {
-      this.inputNumber = e.target.value;
-      Widget.checkPaymentSystem(this.inputNumber);
-    });
-    button.addEventListener('click', () => {
-      Widget.checkValidate(this.inputNumber);
+  static inputClick(element) {
+    element.addEventListener('click', () => {
+      Popover.popError(element);
     });
   }
 
-  static checkValidate(number) {
-    const valid = luhnAlgorithm(number);
-    const input = document.querySelector('input');
-
-    if (input.classList.contains('valid') || input.classList.contains('not-valid')) {
-      input.classList.remove('valid');
-      input.classList.remove('not-valid');
+  static popError(element) {
+    element.focus();
+    const error = document.createElement('div');
+    const text = document.createElement('p');
+    const title = document.createElement('h4');
+    const arrow = document.createElement('div');
+    title.textContent = 'Popover title';
+    text.textContent = 'And heres some amazing content. Its very engaging. Right?';
+    if (document.querySelector('.error') !== null) {
+      document.querySelector('.error').remove();
     }
-    if (valid) {
-      input.classList.add('valid');
-    } else {
-      input.classList.add('not-valid');
-    }
-  }
-
-  static checkPaymentSystem(number) {
-    const paySystem = validateNumber(number);
-    const listPaySystem = document.querySelectorAll('.card');
-
-    for (const i of listPaySystem) {
-      if (i.classList.contains(`${paySystem}`)) {
-        i.classList.remove('disable');
-      } else {
-        i.classList.add('disable');
-      }
-    }
+    error.appendChild(title);
+    error.appendChild(text);
+    error.appendChild(arrow);
+    arrow.className = 'arrow';
+    error.className = 'error';
+    element.offsetParent.appendChild(error);
+    console.log(element.offsetTop, element.offsetHeight);
+    console.log(error.offsetHeight);
+    console.log(element.offsetLeft, element.offsetWidth);
+    error.style.top = `${element.offsetTop - error.offsetHeight - arrow.offsetHeight}px`;
+    error.style.left = `${element.offsetLeft - (error.offsetWidth - element.offsetWidth) / 2}px`;
+    arrow.style.left = `${element.offsetLeft / 2 - 8}px`;
   }
 }
