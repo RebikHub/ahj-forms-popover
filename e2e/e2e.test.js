@@ -1,7 +1,7 @@
 import puppetteer from 'puppeteer';
 import { fork } from 'child_process';
 
-jest.setTimeout(10000); // default puppeteer timeout
+jest.setTimeout(10000);
 
 describe('Credit Card Validator form', () => {
   let browser = null;
@@ -36,21 +36,9 @@ describe('Credit Card Validator form', () => {
   describe('crad validator form', () => {
     test('should add valid', async () => {
       await page.goto(baseUrl);
-      const form = await page.$('form');
-      const input = await form.$('input');
-      await input.type('2201011112147392');
-      const submit = await form.$('button');
-      submit.click();
-      await page.waitForSelector('.valid');
-    });
-    test('should add not-valid', async () => {
-      await page.goto(baseUrl);
-      const form = await page.$('form');
-      const input = await form.$('input');
-      await input.type('777777777777');
-      const submit = await form.$('button');
-      submit.click();
-      await page.waitForSelector('.not-valid');
+      const button = await page.$('button');
+      button.click();
+      await page.waitForSelector('.error');
     });
   });
 });
