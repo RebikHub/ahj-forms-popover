@@ -3,7 +3,7 @@ import { fork } from 'child_process';
 
 jest.setTimeout(10000);
 
-describe('Credit Card Validator form', () => {
+describe('valid error', () => {
   let browser = null;
   let page = null;
   let server = null;
@@ -33,7 +33,7 @@ describe('Credit Card Validator form', () => {
     server.kill();
   });
 
-  describe('crad validator form', () => {
+  describe('validate form on error block', () => {
     test('should add valid', async () => {
       await page.goto(baseUrl);
       const button = await page.$('button');
